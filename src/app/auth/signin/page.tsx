@@ -30,8 +30,8 @@ export default function SignIn() {
         router.push('/')
         router.refresh()
       }
-    } catch (error) {
-      setError('Something went wrong. Please try again.')
+    } catch {
+      setError('Něco se pokazilo. Zkuste to prosím znovu.')
     } finally {
       setIsLoading(false)
     }

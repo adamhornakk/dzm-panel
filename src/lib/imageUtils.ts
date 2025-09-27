@@ -1,3 +1,5 @@
+import { User, Profile } from '@prisma/client'
+
 /**
  * Generate optimized image URL with size parameter
  */
@@ -25,7 +27,7 @@ export function getOptimizedImageUrl(imageUrl: string, size: 'small' | 'medium' 
 /**
  * Get profile image with fallback
  */
-export function getProfileImage(user: any, size: 'small' | 'medium' | 'large' | 'original' = 'medium'): string {
+export function getProfileImage(user: User & { profile: Profile | null }, size: 'small' | 'medium' | 'large' | 'original' = 'medium'): string {
   // Priority: profileImage -> user.image -> fallback to initials
   if (user.profile?.profileImage) {
     return getOptimizedImageUrl(user.profile.profileImage, size)

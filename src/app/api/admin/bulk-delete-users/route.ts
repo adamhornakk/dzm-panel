@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
         'Content-Type': 'application/json',
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Bulk delete error:', error);
     return new NextResponse(JSON.stringify({ message: 'Failed to delete users' }), {
       status: 500,

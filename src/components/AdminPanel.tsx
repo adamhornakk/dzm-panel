@@ -100,7 +100,7 @@ export default function AdminPanel({ users, stats }: AdminPanelProps) {
         const error = await response.json();
         alert(`Failed to create user: ${error.message}`);
       }
-    } catch (error) {
+    } catch {
       alert('Error creating user');
     }
   };

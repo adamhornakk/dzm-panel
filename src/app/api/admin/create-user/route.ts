@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
         'Content-Type': 'application/json',
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('User creation error:', error);
     return new NextResponse(JSON.stringify({ message: 'Failed to create user' }), {
       status: 500,

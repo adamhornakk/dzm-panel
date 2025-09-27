@@ -44,7 +44,7 @@ export default function RequestPage() {
         const data = await response.json()
         setError(data.message || 'Něco se pokazilo. Zkuste to prosím znovu.')
       }
-    } catch (error) {
+    } catch {
       setError('Něco se pokazilo. Zkuste to prosím znovu.')
     } finally {
       setIsSubmitting(false)

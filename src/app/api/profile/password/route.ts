@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
         'Content-Type': 'application/json',
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Password update error:', error);
     return new NextResponse(JSON.stringify({ message: 'Failed to update password' }), {
       status: 500,

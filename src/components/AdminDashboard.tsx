@@ -249,7 +249,7 @@ export default function AdminDashboard({ pendingRequests, users }: AdminDashboar
         setMessage(data.message || 'Chyba při resetování hesel');
         setTimeout(() => setMessage(''), 3000);
       }
-    } catch (error) {
+    } catch {
       setMessage('Chyba při resetování hesel');
       setTimeout(() => setMessage(''), 3000);
     }

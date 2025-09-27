@@ -63,7 +63,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
         const error = await response.json();
         setPasswordMessage(error.message || 'Aktualizace hesla se nezdařila. Zkuste to prosím znovu.');
       }
-    } catch (error) {
+    } catch {
       setPasswordMessage('Něco se pokazilo. Zkuste to prosím znovu.');
     } finally {
       setIsPasswordLoading(false);
@@ -105,7 +105,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
         const error = await response.json()
         setMessage(error.message || 'Nahrání obrázku se nezdařilo')
       }
-    } catch (error) {
+    } catch {
       setMessage('Nahrání obrázku se nezdařilo')
     } finally {
       setIsUploading(false)
@@ -132,7 +132,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
       } else {
         setMessage('Aktualizace profilu se nezdařila. Zkuste to prosím znovu.')
       }
-    } catch (error) {
+    } catch {
       setMessage('Něco se pokazilo. Zkuste to prosím znovu.')
     } finally {
       setIsLoading(false)
