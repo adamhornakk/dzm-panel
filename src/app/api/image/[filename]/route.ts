@@ -9,7 +9,7 @@ export async function GET(
   { params }: { params: { filename: string } }
 ) {
   try {
-    const { filename } = await params
+    const { filename } = params
     const { searchParams } = new URL(request.url)
     const size = searchParams.get('size') || 'original'
     
@@ -76,7 +76,7 @@ export async function GET(
     // Save to cache
     await import('fs/promises').then(fs => fs.writeFile(cachePath, resizedBuffer))
 
-    return new NextResponse(resizedBuffer, {
+    return new NextResponse(resizedBuffer as any, {
       headers: {
         'Content-Type': 'image/webp',
         'Cache-Control': 'public, max-age=31536000, immutable',

@@ -12,10 +12,10 @@ export default function UserProfile({ user }: UserProfileProps) {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="text-center">
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            Profile Not Available
+            Profil není dostupný
           </h2>
           <p className="text-gray-600">
-            This user hasn't set up their profile yet.
+            Tento uživatel si zatím nenastavil účet
           </p>
         </div>
       </div>

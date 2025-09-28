@@ -1,234 +1,96 @@
-# Community Dash
+# Dash Deployment on Ubuntu 22.04
 
-A modern Progressive Web App (PWA) for community management with user profiles, directory, and admin panel. Built with Next.js 14, TypeScript, Tailwind CSS, and MySQL.
+This document provides instructions for deploying the Dash application on a fresh Ubuntu 22.04 server.
 
-## Features
+## Prerequisites
 
-- 🔐 **User Authentication** - Secure login/signup with NextAuth.js
-- 👥 **Community Directory** - Browse and search community members
-- 📱 **Progressive Web App** - Install on mobile devices like a native app
-- 🎨 **Modern UI** - Beautiful, responsive design with Tailwind CSS
-- 👤 **User Profiles** - Rich profiles with social media links and skills
-- ⚙️ **Admin Panel** - User management and community administration
-- 🗄️ **MySQL Database** - Robust data storage with Prisma ORM
-- 📱 **Mobile-First** - Optimized for mobile devices with PWA features
+- A server running Ubuntu 22.04.
+- A non-root user with `sudo` privileges.
+- A Git repository for your project.
 
-## PWA Features
+## Deployment Steps
 
-- **Install on Home Screen** - Users can install the app on their phone
-- **Full Screen Experience** - Opens without browser UI on mobile
-- **Offline Support** - Basic functionality works without internet
-- **Fast Loading** - Cached resources for instant access
-- **Push Notifications** - Ready for community updates (future feature)
+1.  **Clone the Repository**
 
-## Tech Stack
+    First, you need to get the project files onto your server.
 
-- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes, Prisma ORM
-- **Database**: MySQL
-- **Authentication**: NextAuth.js
-- **PWA**: next-pwa
-- **Styling**: Tailwind CSS
+    ```bash
+    git clone https://github.com/your-username/your-repo.git
+    cd your-repo
+    ```
 
-## Getting Started
+2.  **Configure the Deployment Script**
 
-### Prerequisites
+    The `deploy.sh` script automates the setup process. You need to configure a few variables at the top of the script before running it.
 
-- Node.js 18+ 
-- MySQL 8.0+
-- npm or yarn
+    Open the script for editing:
 
-### Installation
+    ```bash
+    nano deploy.sh
+    ```
 
-1. **Clone the repository**
-   ```bash
-   git clone <your-repo-url>
-   cd dash
-   ```
+    Update the following variables:
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+    -   `REPO_URL`: Your project's Git repository URL.
+    -   `DB_NAME`: The name of the database to be created.
+    -   `DB_USER`: The database user.
+    -   `DB_PASSWORD`: A strong password for the database user.
 
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env.local
-   ```
-   
-   Edit `.env.local` with your configuration:
-   ```env
-   # Database (update with your server details)
-   DATABASE_URL="mysql://username:password@your-server-host:3306/community_dash"
-   
-   # NextAuth.js
-   NEXTAUTH_URL="http://localhost:3000"
-   NEXTAUTH_SECRET="your-secret-key-here-change-this-in-production"
-   
-   # App Configuration
-   NEXT_PUBLIC_APP_NAME="Community Dash"
-   NEXT_PUBLIC_APP_DESCRIPTION="Connect with your community members"
-   ```
+    Save and close the file.
 
-4. **Set up MySQL database**
-   
-   **Option A: Local MySQL**
-   ```bash
-   # Create database
-   mysql -u root -p
-   CREATE DATABASE community_dash;
-   ```
-   
-   **Option B: Remote MySQL Server**
-   - Use DataGrip or your preferred MySQL client
-   - Create database: `CREATE DATABASE community_dash;`
-   - Note your server host, username, and password
+3.  **Make the Script Executable**
 
-5. **Run database migrations**
-   ```bash
-   npx prisma migrate dev
-   ```
+    ```bash
+    chmod +x deploy.sh
+    ```
 
-6. **Generate Prisma client**
-   ```bash
-   npx prisma generate
-   ```
+4.  **Run the Deployment Script**
 
-7. **Start the development server**
-   ```bash
-   npm run dev
-   ```
+    Execute the script to start the deployment process:
 
-8. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+    ```bash
+    ./deploy.sh
+    ```
 
-## Usage
+    The script will:
+    -   Install Node.js, npm, and MySQL.
+    -   Guide you through a secure MySQL installation.
+    -   Create a database and user.
+    -   Set up a `.env.local` file with your database URL and a `NEXTAUTH_SECRET`.
+    -   Install project dependencies.
+    -   Run database migrations.
+    -   Build the application for production.
+    -   Use `pm2` to run the application and keep it alive.
 
-### For Users
+5.  **Complete PM2 Setup**
 
-1. **Sign Up** - Create a new account
-2. **Complete Profile** - Add your bio, skills, social media links
-3. **Browse Community** - View other members in the directory
-4. **Install PWA** - Add to home screen on mobile devices
+    After the script finishes, `pm2` will output a command that you need to run. This command allows `pm2` to automatically restart your application on server reboots.
 
-### For Admins
+    Copy and run the command provided by the script. It will look something like this:
 
-1. **Admin Access** - Users with ADMIN role can access admin panel
-2. **User Management** - View and manage community members
-3. **Community Settings** - Configure community-wide settings
+    ```bash
+    sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u <your-user> --hp /home/<your-user>
+    ```
 
-### PWA Installation
+6.  **Verify the Application**
 
-**On Android:**
-1. Open the website in Chrome
-2. Tap the menu (three dots)
-3. Select "Add to Home screen"
-4. Confirm installation
+    You can check the status of your application with:
 
-**On iOS:**
-1. Open the website in Safari
-2. Tap the Share button
-3. Select "Add to Home Screen"
-4. Confirm installation
+    ```bash
+    pm2 status
+    ```
 
-## Project Structure
+    Your application should now be running. If you have a firewall enabled, make sure to allow traffic on port 3000:
 
-```
-dash/
-├── src/
-│   ├── app/                 # Next.js 14 app directory
-│   │   ├── api/            # API routes
-│   │   ├── auth/           # Authentication pages
-│   │   ├── profile/        # User profile pages
-│   │   └── globals.css     # Global styles
-│   ├── components/         # React components
-│   ├── lib/               # Utility libraries
-│   └── types/             # TypeScript type definitions
-├── prisma/
-│   └── schema.prisma      # Database schema
-├── public/
-│   ├── icons/             # PWA icons
-│   └── manifest.json      # PWA manifest
-└── scripts/               # Utility scripts
-```
+    ```bash
+    sudo ufw allow 3000
+    ```
 
-## Database Schema
+    You should now be able to access your application at `http://<your-server-ip>:3000`.
 
-The app uses the following main models:
+## Managing the Application with PM2
 
-- **User** - User accounts and authentication
-- **Profile** - Extended user profile information
-- **Account** - OAuth account connections
-- **Session** - User sessions
-
-## API Endpoints
-
-- `POST /api/auth/register` - User registration
-- `GET /api/users` - Get all users
-- `PUT /api/profile` - Update user profile
-- `GET /api/auth/[...nextauth]` - NextAuth.js endpoints
-
-## Deployment
-
-### Environment Setup
-
-1. **Production Database** - Set up MySQL on your server
-2. **Environment Variables** - Configure production values
-3. **Build** - Run `npm run build`
-4. **Start** - Run `npm start`
-
-### PWA Deployment
-
-- Ensure HTTPS is enabled (required for PWA)
-- Update `NEXTAUTH_URL` to your production domain
-- Test PWA installation on mobile devices
-
-## Customization
-
-### Branding
-
-1. **App Name** - Update `NEXT_PUBLIC_APP_NAME` in environment
-2. **Colors** - Modify Tailwind colors in `tailwind.config.js`
-3. **Icons** - Replace icons in `public/icons/` directory
-4. **Logo** - Update the logo in the header component
-
-### Features
-
-- **Chat System** - Add real-time chat functionality
-- **Events** - Add community events calendar
-- **Groups** - Add user groups and categories
-- **Notifications** - Implement push notifications
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License.
-
-## Support
-
-For support and questions:
-- Create an issue on GitHub
-- Check the documentation
-- Review the code comments
-
-## Roadmap
-
-- [ ] Real-time chat system
-- [ ] Community events
-- [ ] User groups and categories
-- [ ] Push notifications
-- [ ] Advanced search and filtering
-- [ ] Mobile app (React Native)
-- [ ] Analytics dashboard
-- [ ] Integration with external services
-
----
-
-Built with ❤️ using Next.js, TypeScript, and modern web technologies.
+-   **View logs:** `pm2 logs`
+-   **Stop the application:** `pm2 stop dash`
+-   **Restart the application:** `pm2 restart dash`
+-   **Delete the application from PM2:** `pm2 delete dash`
